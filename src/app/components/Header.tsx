@@ -1,0 +1,48 @@
+// components/Header.tsx
+import Link from "next/link";
+
+export default function Header() {
+  return (
+    <header style={styles.header}>
+      <div style={styles.logo}>
+        <Link href="/">MiWeb</Link>
+      </div>
+      <nav>
+        <ul style={styles.navList}>
+          <li>
+            <Link href="/">Inicio</Link>
+          </li>
+          <li>
+            <Link href="/about">Nosotros</Link>
+          </li>
+          <li>
+            <Link href="/services">Servicios</Link>
+          </li>
+          <li>
+            <Link href="/contact">Contacto</Link>
+          </li>
+        </ul>
+      </nav>
+    </header>
+  );
+}
+
+const styles = {
+  header: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: "1rem 2rem",
+    backgroundColor: "#1f2937",
+    color: "#fff",
+  },
+  logo: {
+    fontWeight: "bold",
+    fontSize: "1.5rem",
+  },
+  navList: {
+    display: "flex",
+    gap: "1.5rem",
+    listStyle: "none",
+  },
+};
