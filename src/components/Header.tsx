@@ -5,7 +5,9 @@ export default function Header() {
   return (
     <header style={styles.header}>
       <div style={styles.logo}>
-        <Link href="/">MiWeb</Link>
+        <Link href="/">
+          <img src="/logo.png" alt="MiWeb" className="h-10" />
+        </Link>
       </div>
       <nav>
         <ul style={styles.navList}>
