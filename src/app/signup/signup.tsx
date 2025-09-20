@@ -52,41 +52,41 @@ export const SignUp = () => {
 
   return (
     <div>
-      <div className="h-1/2 w-1/2 border-2 border-black m-auto mt-20 p-10 rounded-lg shadow-lg flex flex-col items-center">
+      <div className="flex flex-col items-center w-1/2 p-10 m-auto mt-20 border-2 border-black rounded-lg shadow-lg h-1/2">
         <img
           src="./logo.png"
           alt="logo"
-          className="bg-black border-2 border-black rounded-full w-25 h-25 mb-4 "
+          className="mb-4 bg-black border-2 border-black rounded-full w-25 h-25 "
         />
-        <h1 className="text-3xl font-bold mb-6 text-center">Sign Up</h1>
+        <h1 className="mb-6 text-3xl font-bold text-center">Registrarse</h1>
 
-        <form className="flex flex-col items-start gap-5 w-full max-w-sm">
+        <form className="flex flex-col items-start w-full max-w-sm gap-5">
           <label htmlFor="email">Email:</label>
           <input
             name="email"
-            type="text"
-            placeholder="Enter your email"
-            className="border-2 border-gray-300 p-2 w-full"
+            type="email"
+            placeholder="Entrar tu email"
+            className="w-full p-2 border-2 border-gray-300"
             onChange={changeHandler}
             required
           />
 
-          <label htmlFor="password">Password:</label>
+          <label htmlFor="password">Contraseña:</label>
           <input
             name="password"
             type="password"
-            placeholder="Enter your password"
-            className="border-2 border-gray-300 p-2 w-full"
+            placeholder="Entrar contraseña"
+            className="w-full p-2 border-2 border-gray-300"
             onChange={changeHandler}
             required
           />
 
-          <label htmlFor="confirm-password">Confirm Password:</label>
+          <label htmlFor="confirm-password">Confirmar Contraseña:</label>
           <input
             name="confirmPassword"
             type="password"
-            placeholder="Confirm your password"
-            className="border-2 border-gray-300 p-2 w-full"
+            placeholder="Confirmar tu contraseña"
+            className="w-full p-2 border-2 border-gray-300"
             onChange={changeHandler}
             required
           />
@@ -97,7 +97,7 @@ export const SignUp = () => {
           color="primary"
           sx={{ marginTop: "20px" }}
         >
-          Sign Up
+          Registrarse
         </Button>
       </div>
     </div>

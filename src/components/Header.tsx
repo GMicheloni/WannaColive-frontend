@@ -15,13 +15,10 @@ export default function Header() {
             <Link href="/">Inicio</Link>
           </li>
           <li>
-            <Link href="/about">Nosotros</Link>
+            <Link href="/signup">Registrarse</Link>
           </li>
           <li>
-            <Link href="/services">Servicios</Link>
-          </li>
-          <li>
-            <Link href="/contact">Contacto</Link>
+            <Link href="/signin">Iniciar Sesión</Link>
           </li>
         </ul>
       </nav>
