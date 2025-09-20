@@ -1,8 +1,8 @@
-import Ticket from "@/components/Ticket";
+import TicketComponent from "@/components/Ticket";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import Link from "next/link";
-
-export const ticketsMockup = [
+import Ticket from "@/types/ticket";
+export const ticketsMockup: Ticket[] = [
   {
     id: 1,
     subject: "Problema con la cuenta",
@@ -38,12 +38,12 @@ export const MisTickets = () => {
       <div className="items-center justify-center w-1/2 m-auto mt-4">
         <h1 className="text-2xl font-bold">Mis Tickets</h1>
         <p>Aquí puedes ver tus tickets.</p>
-        {ticketsMockup.map((ticket: any) => (
+        {ticketsMockup.map((ticket: Ticket) => (
           <div
             key={ticket.id}
             className="p-4 my-4 border border-gray-300 rounded"
           >
-            {Ticket(
+            {TicketComponent(
               ticket.subject,
               ticket.description,
               ticket.status,

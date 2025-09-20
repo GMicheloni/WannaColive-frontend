@@ -1,4 +1,4 @@
-export const Ticket = (
+export const TicketComponent = (
   subject: string,
   description: string,
   status: string,
@@ -28,4 +28,4 @@ export const Ticket = (
   );
 };
 
-export default Ticket;
+export default TicketComponent;

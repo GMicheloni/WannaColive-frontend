@@ -1,12 +1,12 @@
 // components/Header.tsx
 import Link from "next/link";
-
+import Image from "next/image";
 export default function Header() {
   return (
     <header style={styles.header}>
       <div style={styles.logo}>
         <Link href="/">
-          <img src="/logo.png" alt="MiWeb" className="h-10" />
+          <Image src="/logo.png" alt="MiWeb" className="h-10" />
         </Link>
       </div>
       <nav>
