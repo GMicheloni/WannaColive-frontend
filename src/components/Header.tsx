@@ -6,7 +6,13 @@ export default function Header() {
     <header style={styles.header}>
       <div style={styles.logo}>
         <Link href="/">
-          <Image src="/logo.png" alt="MiWeb" className="h-10" />
+          <Image
+            src="/logo.png"
+            alt="MiWeb"
+            className="h-10"
+            width={40}
+            height={40}
+          />
         </Link>
       </div>
       <nav>

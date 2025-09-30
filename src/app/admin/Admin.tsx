@@ -1,13 +1,15 @@
-import DataTable from "@/components/DataTable";
-
+import { Card } from "@/components/Card";
+import SideBar from "@/components/SideBar";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import BuildIcon from "@mui/icons-material/Build";
+import HelpIcon from "@mui/icons-material/Help";
+import ConfirmationNumberRoundedIcon from "@mui/icons-material/ConfirmationNumberRounded";
 export const Admin = () => {
   return (
-    <div>
-      <div className="items-center justify-center p-4 m-4 border border-black border-solid">
-        <h1 className="text-2xl font-bold">Panel de Administración</h1>
-        <p>Aquí puedes gestionar la aplicación.</p>
-        <DataTable />
-      </div>
+    <div className="p-8 ">
+      <h1 className="text-2xl font-bold pl-60">
+        Bienvenido al Panel Administrativo
+      </h1>
     </div>
   );
 };
