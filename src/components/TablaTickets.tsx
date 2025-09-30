@@ -15,6 +15,13 @@ import DialogTitle from "@mui/material/DialogTitle";
 import TextField from "@mui/material/TextField";
 import Ticket from "@/types/ticket";
 
+const estados: Array<"todos" | "pendiente" | "abierto" | "cerrado"> = [
+  "todos",
+  "pendiente",
+  "abierto",
+  "cerrado",
+];
+
 const tickets: Ticket[] = [
   {
     id: 1,
@@ -78,11 +85,11 @@ export const TablaTickets = () => {
     <div>
       {/* Botones de filtro */}
       <div style={{ marginBottom: 16 }}>
-        {["todos", "pendiente", "abierto", "cerrado"].map((status) => (
+        {estados.map((status) => (
           <Button
             key={status}
             variant={filtro === status ? "contained" : "outlined"}
-            onClick={() => setFiltro(status as any)}
+            onClick={() => setFiltro(status)}
             sx={{ mr: 1 }}
           >
             {status.toUpperCase()}
