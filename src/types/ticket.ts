@@ -5,4 +5,5 @@ export default interface Ticket {
   status: "abierto" | "pendiente" | "cerrado";
   createdAt: string;
   updatedAt: string;
+  adminFeedback?: string | null;
 }

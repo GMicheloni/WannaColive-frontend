@@ -8,11 +8,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
-import Dialog from "@mui/material/Dialog";
-import DialogTitle from "@mui/material/DialogTitle";
-import DialogContent from "@mui/material/DialogContent";
-import DialogActions from "@mui/material/DialogActions";
-import TextField from "@mui/material/TextField";
+import ModalAltaUsuario from "@/components/ModalAltaUsuario";
 
 interface Usuario {
   id: number;
@@ -30,11 +26,7 @@ export const TablaPendientes = () => {
   const [open, setOpen] = useState(false);
   const [usuarioSeleccionado, setUsuarioSeleccionado] =
     useState<Usuario | null>(null);
-  const [formData, setFormData] = useState({
-    nombre: "",
-    apellido: "",
-    telefono: "",
-  });
+  const [casa, setCasa] = useState("");
 
   const handleOpen = (usuario: Usuario) => {
     setUsuarioSeleccionado(usuario);
@@ -44,11 +36,7 @@ export const TablaPendientes = () => {
   const handleClose = () => {
     setOpen(false);
     setUsuarioSeleccionado(null);
-    setFormData({ nombre: "", apellido: "", telefono: "" });
-  };
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setCasa("");
   };
 
   const handleSubmit = () => {
@@ -57,11 +45,8 @@ export const TablaPendientes = () => {
     console.log("Dar de alta:", {
       id: usuarioSeleccionado.id,
       email: usuarioSeleccionado.email,
-      ...formData,
+      casa,
     });
-
-    // Acá podrías hacer fetch a tu API
-    // await fetch("/api/colivers/alta", { method: "POST", body: JSON.stringify({ ... }) })
 
     handleClose();
   };
@@ -93,44 +78,14 @@ export const TablaPendientes = () => {
         </Table>
       </TableContainer>
 
-      {/* Modal */}
-      <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
-        <DialogTitle>Completar datos del usuario</DialogTitle>
-        <DialogContent>
-          <TextField
-            margin="dense"
-            label="Nombre"
-            name="nombre"
-            fullWidth
-            value={formData.nombre}
-            onChange={handleChange}
-          />
-          <TextField
-            margin="dense"
-            label="Apellido"
-            name="apellido"
-            fullWidth
-            value={formData.apellido}
-            onChange={handleChange}
-          />
-          <TextField
-            margin="dense"
-            label="Teléfono"
-            name="telefono"
-            fullWidth
-            value={formData.telefono}
-            onChange={handleChange}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose} color="secondary">
-            Cancelar
-          </Button>
-          <Button onClick={handleSubmit} variant="contained" color="primary">
-            Guardar
-          </Button>
-        </DialogActions>
-      </Dialog>
+      {/* Modal extraído */}
+      <ModalAltaUsuario
+        open={open}
+        casa={casa}
+        onClose={handleClose}
+        onSubmit={handleSubmit}
+        onChangeCasa={setCasa}
+      />
     </div>
   );
 };
