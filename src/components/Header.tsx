@@ -1,7 +1,17 @@
-// components/Header.tsx
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+
 export default function Header() {
+  const router = useRouter();
+
+  const handleLogout = () => {
+    localStorage.removeItem("token"); // elimina el token
+    router.push("/"); // redirige a la home pública
+  };
+
   return (
     <header style={styles.header}>
       <div style={styles.logo}>
@@ -26,6 +36,12 @@ export default function Header() {
           <li>
             <Link href="/signin">Iniciar Sesión</Link>
           </li>
+          <li>
+            {/* Botón de deslogueo */}
+            <button onClick={handleLogout} style={styles.logoutButton}>
+              Cerrar Sesión
+            </button>
+          </li>
         </ul>
       </nav>
     </header>
@@ -49,5 +65,14 @@ const styles = {
     display: "flex",
     gap: "1.5rem",
     listStyle: "none",
+    alignItems: "center",
+  },
+  logoutButton: {
+    backgroundColor: "#ef4444",
+    color: "#fff",
+    border: "none",
+    padding: "0.5rem 1rem",
+    borderRadius: "0.375rem",
+    cursor: "pointer",
   },
 };

@@ -1,9 +1,9 @@
 export default interface Ticket {
-  id: number;
-  subject: string;
-  description: string;
-  status: "abierto" | "pendiente" | "cerrado";
-  createdAt: string;
-  updatedAt: string;
-  adminFeedback?: string | null;
+  id?: number;
+  asunto: string;
+  descripcion: string;
+  estado?: "abierto" | "pendiente" | "cerrado";
+  creadoEl?: string;
+  actualizadoEn?: string;
+  comentarioAdmin?: string | null;
 }

@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -13,77 +13,88 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import TextField from "@mui/material/TextField";
-import Ticket from "@/types/ticket";
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-const estados: Array<"todos" | "pendiente" | "abierto" | "cerrado"> = [
+const estados: Array<"todos" | "abierto" | "cerrado"> = [
   "todos",
-  "pendiente",
   "abierto",
   "cerrado",
 ];
 
-const tickets: Ticket[] = [
-  {
-    id: 1,
-    subject: "Ticket 1",
-    description: "Descripción del ticket 1",
-    status: "abierto",
-    createdAt: "2023-01-01",
-    updatedAt: "2023-01-01",
-  },
-  {
-    id: 2,
-    subject: "Ticket 2",
-    description: "Descripción del ticket 2",
-    status: "cerrado",
-    createdAt: "2023-01-02",
-    updatedAt: "2023-01-02",
-  },
-  {
-    id: 3,
-    subject: "Ticket 3",
-    description: "Descripción del ticket 3",
-    status: "pendiente",
-    createdAt: "2023-01-03",
-    updatedAt: "2023-01-03",
-  },
-];
-
 export const TablaTickets = () => {
-  const [filtro, setFiltro] = useState<
-    "todos" | "pendiente" | "abierto" | "cerrado"
-  >("todos");
-
+  const [filtro, setFiltro] = useState<"todos" | "abierto" | "cerrado">(
+    "todos"
+  );
+  const [tickets, setTickets] = useState<any[]>([]);
   const [open, setOpen] = useState(false);
-  const [selectedTicket, setSelectedTicket] = useState<Ticket | null>(null);
+  const [selectedTicket, setSelectedTicket] = useState<any | null>(null);
   const [feedback, setFeedback] = useState("");
 
-  // Filtrar tickets según el estado
-  const ticketsFiltrados =
-    filtro === "todos" ? tickets : tickets.filter((t) => t.status === filtro);
+  const fetchTickets = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) return;
 
-  const handleOpen = (ticket: Ticket) => {
+    try {
+      const res = await fetch(`${API_URL}/tickets/all`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const data = await res.json();
+      setTickets(data);
+    } catch (err) {
+      console.error("Error fetching tickets:", err);
+    }
+  };
+  // Traer tickets desde backend
+  useEffect(() => {
+    fetchTickets();
+  }, []);
+
+  const ticketsFiltrados =
+    filtro === "todos"
+      ? tickets
+      : tickets.filter((t) => {
+          const estadoTicket = String(t?.estado ?? "")
+            .toLowerCase()
+            .trim();
+          return estadoTicket === filtro;
+        });
+
+  const handleOpen = (ticket: any) => {
+    console.log("Ticket seleccionado:", ticket.id); // <-- loguea el id
     setSelectedTicket(ticket);
+
     setOpen(true);
   };
 
-  const handleClose = () => {
+  const handleClose = async () => {
     setOpen(false);
     setSelectedTicket(null);
     setFeedback("");
+    await fetchTickets();
   };
 
   const handleSubmit = () => {
     if (selectedTicket) {
-      console.log(`Feedback para ticket ${selectedTicket.id}:`, feedback);
-      // acá podrías llamar a tu API para guardar el feedback
+      fetch(`${API_URL}/tickets/${selectedTicket.id}/close`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify({ comentarioAdmin: feedback }),
+      })
+        .then((res) => res.json())
+        .then((data) => {})
+        .catch((err) => console.error("Error cerrando ticket:", err));
     }
     handleClose();
   };
 
   return (
     <div>
-      {/* Botones de filtro */}
       <div style={{ marginBottom: 16 }}>
         {estados.map((status) => (
           <Button
@@ -97,7 +108,6 @@ export const TablaTickets = () => {
         ))}
       </div>
 
-      {/* Tabla */}
       <TableContainer component={Paper} sx={{ mt: 2 }}>
         <Table>
           <TableHead>
@@ -111,13 +121,13 @@ export const TablaTickets = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {ticketsFiltrados.map((t) => (
-              <TableRow key={t.id}>
-                <TableCell>{t.subject}</TableCell>
-                <TableCell>{t.description}</TableCell>
-                <TableCell>{t.status}</TableCell>
-                <TableCell>{t.createdAt}</TableCell>
-                <TableCell>{t.updatedAt}</TableCell>
+            {ticketsFiltrados.map((t, index) => (
+              <TableRow key={t.id ?? index}>
+                <TableCell>{t.asunto.tipo}</TableCell>
+                <TableCell>{t.descripcion}</TableCell>
+                <TableCell>{t.estado}</TableCell>
+                <TableCell>{t.creadoEn}</TableCell>
+                <TableCell>{t.actualizadoEn}</TableCell>
                 <TableCell>
                   <Button variant="contained" onClick={() => handleOpen(t)}>
                     Tratar
@@ -129,7 +139,6 @@ export const TablaTickets = () => {
         </Table>
       </TableContainer>
 
-      {/* Modal para feedback */}
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Dar feedback</DialogTitle>
         <DialogContent>

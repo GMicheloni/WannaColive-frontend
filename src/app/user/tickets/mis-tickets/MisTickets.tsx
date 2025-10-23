@@ -1,10 +1,52 @@
+"use client";
+import { useEffect, useState } from "react";
 import Ticket from "@/types/ticket";
-import { ticketsMockup } from "@/helpers/tickets";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import Link from "next/link";
 import clsx from "clsx";
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
 export const MisTickets = () => {
+  const [tickets, setTickets] = useState<Ticket[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchTickets = async () => {
+      try {
+        const token = localStorage.getItem("token");
+
+        if (!token) {
+          console.error("No hay token disponible");
+          return;
+        }
+
+        const response = await fetch(`${API_URL}/tickets`, {
+          headers: {
+            Authorization: `Bearer ${token}`, // 👈 se manda el JWT
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error("Error al obtener los tickets");
+        }
+
+        const data = await response.json();
+        console.log(data);
+        setTickets(data); // 👈 el backend devuelve los tickets del usuario
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTickets();
+  }, []);
+
+  if (loading) {
+    return <p className="p-4 text-center">Cargando tickets...</p>;
+  }
+
   return (
     <div className="p-4 m-4 border border-black border-solid">
       <Link href="/user/tickets">
@@ -27,35 +69,37 @@ export const MisTickets = () => {
               </tr>
             </thead>
             <tbody>
-              {ticketsMockup.map((ticket: Ticket) => (
+              {tickets.map((ticket: any, index: number) => (
                 <tr
-                  key={ticket.id}
+                  key={ticket.id ?? index}
                   className="transition-colors hover:bg-gray-50"
                 >
                   <td className="px-4 py-2 font-medium text-blue-600 border-b">
-                    #{ticket.id}
+                    #{ticket.id ?? index}
                   </td>
-                  <td className="px-4 py-2 border-b">{ticket.subject}</td>
+                  <td className="px-4 py-2 border-b">
+                    {ticket.asunto?.tipo ?? "—"}
+                  </td>
                   <td className="px-4 py-2 border-b">
                     <span
                       className={clsx(
                         "px-2 py-1 rounded text-xs font-semibold",
                         {
                           "bg-green-100 text-green-700":
-                            ticket.status === "abierto",
-                          "bg-yellow-100 text-yellow-700":
-                            ticket.status === "pendiente",
+                            ticket.estado === "Abierto",
                           "bg-gray-200 text-gray-700":
-                            ticket.status === "cerrado",
+                            ticket.estado === "Cerrado",
                         }
                       )}
                     >
-                      {ticket.status}
+                      {ticket.estado}
                     </span>
                   </td>
-                  <td className="px-4 py-2 border-b">{ticket.updatedAt}</td>
+                  <td className="px-4 py-2 border-b">
+                    {new Date(ticket.actualizadoEn).toLocaleString()}
+                  </td>
                   <td className="px-4 py-2 text-gray-600 border-b">
-                    {ticket.adminFeedback ?? "—"}
+                    {ticket.comentarioAdmin ?? "—"}
                   </td>
                 </tr>
               ))}

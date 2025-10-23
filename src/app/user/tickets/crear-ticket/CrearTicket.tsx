@@ -8,33 +8,58 @@ import {
 } from "@mui/material";
 import Link from "next/link";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { ticketsMockup } from "@/helpers/tickets";
-import { useState } from "react";
-import Ticket from "@/types/ticket";
+import { useEffect, useState } from "react";
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export const CrearTicket = () => {
-  const [subject, setSubject] = useState("");
   const [description, setDescription] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
-    if (!subject || !description) {
-      alert("Por favor, complete todos los campos.");
+  const [subjects, setSubjects] = useState<{ id: number; tipo: string }[]>([]);
+
+  const [selectedSubject, setSelectedSubject] = useState(""); // id del asunto seleccionado
+
+  useEffect(() => {
+    // Traer los asuntos desde tu endpoint
+    fetch(`${API_URL}/asunto`) // ajustá la URL según tu API
+      .then((res) => res.json())
+      .then((data) => setSubjects(data))
+      .catch((err) => console.error("Error al obtener asuntos:", err));
+  }, []);
+
+  const handleSubmit = async () => {
+    if (!selectedSubject || !description.trim()) {
+      alert("Completa todos los campos");
       return;
     }
-    e.preventDefault();
-    const newTicket: Ticket = {
-      id: ticketsMockup.length + 1,
-      subject,
-      description,
-      status: "abierto",
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
+
+    const ticketData = {
+      asuntoId: selectedSubject,
+      descripcion: description,
     };
-    setSubject("");
-    setDescription("");
-    alert("Ticket creado con éxito ");
-    console.log("Ticket creado:", newTicket);
+    const token = localStorage.getItem("token");
+    try {
+      const res = await fetch(`${API_URL}/tickets`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(ticketData),
+      });
+
+      if (!res.ok) throw new Error("Error al crear ticket");
+
+      const result = await res.json();
+      console.log("Ticket creado:", result);
+      alert("Ticket creado correctamente ✅");
+      setDescription("");
+      setSelectedSubject("");
+    } catch (error) {
+      console.error(error);
+      alert("Hubo un error al crear el ticket ❌");
+    }
   };
+
   return (
     <div>
       <div className="items-center justify-center w-1/2 p-4 m-auto mt-20 border border-black border-solid ">
@@ -44,18 +69,18 @@ export const CrearTicket = () => {
         <form className="flex flex-col items-center justify-center gap-4">
           <h1 className="text-2xl font-bold">Crear Ticket</h1>
           <FormControl fullWidth>
-            <InputLabel id="demo-simple-select-label">Asunto</InputLabel>
+            <InputLabel id="select-asunto-label">Asunto</InputLabel>
             <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              value={subject}
-              onChange={(e) => setSubject(e.target.value)}
+              labelId="select-asunto-label"
+              id="select-asunto"
+              value={selectedSubject}
+              onChange={(e) => setSelectedSubject(e.target.value)}
             >
-              <MenuItem value={"Mantenimiento"}>Mantenimiento</MenuItem>
-              <MenuItem value={"Convivencia"}>Convivencia</MenuItem>
-              <MenuItem value={"Servicios"}>Servicios</MenuItem>
-              <MenuItem value={"Sugerencia"}>Sugerencia</MenuItem>
-              <MenuItem value={"Otro"}>Otro</MenuItem>
+              {subjects.map((asunto) => (
+                <MenuItem key={asunto.id} value={asunto.id}>
+                  {asunto.tipo}
+                </MenuItem>
+              ))}
             </Select>
           </FormControl>
           <textarea
