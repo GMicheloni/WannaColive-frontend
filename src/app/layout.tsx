@@ -1,7 +1,15 @@
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import "./globals.css";
+import type { Metadata } from "next";
 
+export const metadata: Metadata = {
+  title: "Wanna App",
+  description: "Aplicacion para gestionar WannaColive",
+  icons: {
+    icon: "/favicon.ico",
+  },
+};
 export default function RootLayout({
   children,
 }: {
