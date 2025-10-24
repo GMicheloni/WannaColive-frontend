@@ -6,6 +6,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Wanna App",
   description: "Aplicacion para gestionar WannaColive",
+  manifest: "/manifest.json",
   icons: {
     icon: "/favicon.ico",
   },
