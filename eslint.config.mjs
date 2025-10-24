@@ -19,6 +19,11 @@ const eslintConfig = [
       "build/**",
       "next-env.d.ts",
     ],
+    rules: {
+      "@typescript-eslint/no-unused-vars": "warn", // no lo trata como error
+      "@typescript-eslint/no-explicit-any": "off", // permite usar any
+      "@next/next/no-img-element": "off", // permite usar <img>
+    },
   },
 ];
 

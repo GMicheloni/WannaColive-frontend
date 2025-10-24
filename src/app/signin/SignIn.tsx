@@ -3,7 +3,7 @@
 import { Button } from "@mui/material";
 import React from "react";
 import { useRouter } from "next/navigation"; // Next.js 13+ con app router
-
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
 export const SignIn = () => {
   const [userdata, setUserdata] = React.useState({
     email: "",
@@ -25,6 +25,7 @@ export const SignIn = () => {
   };
 
   function submitHandler(e: React.FormEvent) {
+    console.log(`${API_URL}/auth/signin`);
     e.preventDefault();
     const validationErrors = validateForm(userdata);
     setErrors(validationErrors);
@@ -35,7 +36,7 @@ export const SignIn = () => {
           .join("\n")
       );
     } else {
-      fetch("http://localhost:3001/auth/signin", {
+      fetch(`${API_URL}/auth/signin`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(userdata),
